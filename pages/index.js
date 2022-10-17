@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Entidades } from "../components/Entidades";
 import { clienteAxios } from "../helpers/clienteAxios";
@@ -18,11 +18,26 @@ export default function Home() {
 		watch,
 		formState: { errors },
 		handleSubmit,
+		getValues
 	} = useForm({
 		defaultValues: {
 			entidades: [
 				{
-					tipoEntidad: "",
+					tipoEntidad: "arl",
+					entidad: "",
+					fechaAfiliacion: "",
+					estadoAfiliacion: "",
+					observaciones: "",
+				},
+				{
+					tipoEntidad: "eps",
+					entidad: "",
+					fechaAfiliacion: "",
+					estadoAfiliacion: "",
+					observaciones: "",
+				},
+				{
+					tipoEntidad: "fondo de pensiones",
 					entidad: "",
 					fechaAfiliacion: "",
 					estadoAfiliacion: "",
@@ -38,23 +53,15 @@ export default function Home() {
 		name: "entidades",
 	});
 
-	const getEntidad = async (entidadSelected) => {
-		console.log(
-			"🚀 ~ file: index.js ~ line 38 ~ getEntidad ~ entidadSelected",
-			entidadSelected
-		);
-
-		const entidad = await clienteAxios.post("/entidades/type", {
-			entidadName: entidadSelected,
-		});
-
-		console.log(
-			"🚀 ~ file: index.js ~ line 42 ~ getEntidad ~ endidad",
-			entidad.data.data
-		);
-
+	const getEntidad = async () => {		
+		const entidad = await clienteAxios("/entidades");		
 		setEntidadData( entidad.data.data );
 	};
+
+	useEffect(() => {
+		getEntidad();
+	}, []);
+	
 
 	return (
 		<div className={styles.container}>
@@ -79,19 +86,19 @@ export default function Home() {
 												key={field.id}
 												className="flex flex-row mt-2"
 											>
-												<div className="w-11/12 flex flex-row flex-wrap">
+												<div className="w-full flex flex-row flex-wrap">
 													<div className="w-6/12">
 														<div>
 															<label htmlFor=""> Tipo entidad </label>
 															<br />
 															<select
 																className="form-select border-2 w-full"
-																{...register( `entidades[${index}].tipoEntidad`, { onChange: (e) => getEntidad( e.target.value ) } )}
+																{...register( `entidades[${index}].tipoEntidad` )} disabled
 															>
 																<option value=""> Selecciona una entidad </option>
 																<option value="arl"> Arl </option>
 																<option value="eps"> EPS </option>
-																<option value="pensiones"> PENSIONES </option>
+																<option value="fondo de pensiones"> Fondo de pensiones </option>
 															</select>
 														</div>
 													</div>
@@ -105,7 +112,7 @@ export default function Home() {
 															>
 																<option value=""> Selecciona una entidad </option>
 																{ 
-																	entidadData.map( ( d, index ) => ( <option key={ index } value={ d.id } > { d.nombre_entidad } </option> ) )
+																	entidadData.filter( item => item.entidad ==  getValues(`entidades[${index}].tipoEntidad`)  ).map( ( d, index ) => ( <option key={ index } value={ d.id } > { d.nombre_entidad } </option> ) )
 																}
 															</select>
 														</div>
@@ -145,7 +152,7 @@ export default function Home() {
 														></textarea>
 													</div>
 												</div>
-												<div className="w-`/12 ml-3">
+												{/* <div className="w-`/12 ml-3">
 													<button
 														type="button"
 														onClick={() => remove(index) }
@@ -153,12 +160,12 @@ export default function Home() {
 													>
 														Delete
 													</button>
-												</div>
+												</div> */}
 											</div>
 										);
 									})}
 
-									<div className="w-full">
+									{/* <div className="w-full">
 										<button
 											type="button"
 											className="btn block bg-green-500 px-4 h-full w-full ml-4"
@@ -177,7 +184,7 @@ export default function Home() {
 											<i className="fas fa-plus"></i>
 											agregar entidad
 										</button>
-									</div>
+									</div> */}
 								</div>
 							</div>
 						</div>
