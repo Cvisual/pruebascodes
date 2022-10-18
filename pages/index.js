@@ -93,7 +93,8 @@ export default function Home() {
 															<br />
 															<select
 																className="form-select border-2 w-full"
-																{...register( `entidades[${index}].tipoEntidad` )} disabled
+																{...register( `entidades[${index}].tipoEntidad` )}
+																disabled
 															>
 																<option value=""> Selecciona una entidad </option>
 																<option value="arl"> Arl </option>
@@ -112,7 +113,8 @@ export default function Home() {
 															>
 																<option value=""> Selecciona una entidad </option>
 																{ 
-																	entidadData.filter( item => item.entidad ==  getValues(`entidades[${index}].tipoEntidad`)  ).map( ( d, index ) => ( <option key={ index } value={ d.id } > { d.nombre_entidad } </option> ) )
+																	entidadData.filter( item => item.entidad === getValues(`entidades[${index}].tipoEntidad`)  )
+																	.map( ( d, index ) => ( <option key={ index } value={ d.id } > { d.nombre_entidad } </option> ) )
 																}
 															</select>
 														</div>
