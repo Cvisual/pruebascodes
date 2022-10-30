@@ -51,14 +51,14 @@ export default function Home() {
 				<div className="flex flex-col justify-between">
 					<form onSubmit={handleSubmit(onSubmit)}>
 					<select
-				className="px-12 py-2 mr-2  border-2"
-				onChange={(e) => {
-					countrySelected.onChange(e);
-					statesData();
-				}}
-				ref={countrySelected.ref}
-				name="country"
-			>
+						className="px-12 py-2 mr-2  border-2"
+						onChange={(e) => {
+							countrySelected.onChange(e);
+							statesData();
+						}}
+						ref={countrySelected.ref}
+						name="country"
+					>
 				<option value="">seleccione un pais</option>
 				{countries?.map((country, index) => (
 					<option key={index} value={country.isoCode}>
